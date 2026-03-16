@@ -21,11 +21,16 @@ function loadKeys(): void {
   const privatePath = path.resolve(process.env.JWT_PRIVATE_KEY_PATH || './keys/private.pem');
   const publicPath  = path.resolve(process.env.JWT_PUBLIC_KEY_PATH  || './keys/public.pem');
 
+  // Prioridade 1: variaveis de ambiente (Railway)
+  if (process.env.JWT_PRIVATE_KEY && process.env.JWT_PUBLIC_KEY) {
+    privateKey = process.env.JWT_PRIVATE_KEY.replace(/\\n/g, '\n');
+    publicKey  = process.env.JWT_PUBLIC_KEY.replace(/\\n/g, '\n');
+    return;
+  }
+
+  // Prioridade 2: arquivo local (desenvolvimento)
   if (!fs.existsSync(privatePath) || !fs.existsSync(publicPath)) {
-    throw new Error(
-      'Chaves RSA nao encontradas. Execute: npm run generate-keys\n' +
-      `Esperado em: ${privatePath} e ${publicPath}`
-    );
+    throw new Error(`Chaves RSA nao encontradas em: ${privatePath}`);
   }
 
   privateKey = fs.readFileSync(privatePath, 'utf8');
