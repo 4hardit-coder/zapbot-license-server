@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enum de status da licenca ───────────────────────────
+enum LicenseStatus {
+  PENDING   // gerada, aguardando primeira ativacao
+  ACTIVE    // ativada e em uso
+  EXPIRED   // prazo de 1 ano encerrado
+  REVOKED   // revogada manualmente pelo admin
+}
+
+// ─── Enum de acoes no log ────────────────────────────────
+enum LogAction {
+  ACTIVATE  // primeira ativacao da chave
+  VALIDATE  // validacao periodica do desktop
+  REJECT    // tentativa rejeitada
+  REVOKE    // revogacao pelo admin
+  EXPIRE    // expiracao automatica
+}
+
+// ─── Tabela principal de licencas ────────────────────────
+model License {
+  id                String        @id @default(uuid())
+  license_key       String        @unique
+  customer_email    String
+  customer_name     String
+  hotmart_txn_id    String?       @unique
+  plan              String        @default("annual")
+  status            LicenseStatus @default(PENDING)
+
+  // Preenchido na primeira ativacao
+  hardware_id       String?
+  activated_at      DateTime?
+
+  // Datas
+  expires_at        DateTime
+  last_validated_at DateTime?
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+
+  // Relacionamento
+  logs              ValidationLog[]
+
+  @@index([license_key])
+  @@index([customer_email])
+  @@index([status])
+  @@map("licenses")
+}
+
+// ─── Log de todas as validacoes ──────────────────────────
+model ValidationLog {
+  id          String    @id @default(uuid())
+  license_id  String
+  hardware_id String
+  ip_address  String
+  action      LogAction
+  reason      String?
+  created_at  DateTime  @default(now())
+
+  // Relacionamento
+  license     License   @relation(fields: [license_id], references: [id])
+
+  @@index([license_id])
+  @@index([created_at])
+  @@map("validation_logs")
+}
+
+// ─── Usuarios admin do painel ────────────────────────────
+model AdminUser {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  password_hash  String
+  created_at     DateTime  @default(now())
+  last_login_at  DateTime?
+
+  @@map("admin_users")
+}

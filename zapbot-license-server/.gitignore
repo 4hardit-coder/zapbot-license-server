@@ -1,0 +1,30 @@
+# Dependencias
+node_modules/
+dist/
+
+# Ambiente
+.env
+.env.local
+.env.production
+
+# Chaves RSA - NUNCA commitar
+keys/private.pem
+keys/*.pem
+
+# Banco local
+*.db
+*.sqlite
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
