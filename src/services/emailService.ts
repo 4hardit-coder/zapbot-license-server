@@ -16,7 +16,7 @@ export async function sendLicenseEmail(
   try {
     const { error } = await resend.emails.send({
       from:    process.env.EMAIL_FROM    || '4Hard Zap-Marketing <onboarding@resend.dev>',
-      replyTo: process.env.EMAIL_REPLY_TO || '4hard.it@gmail.com',
+      reply_To: process.env.EMAIL_REPLY_TO || '4hard.it@gmail.com',
       to:      customerEmail,
       subject: '🔑 Sua licenca 4Hard Zap-Marketing chegou!',
       html:    buildEmailHtml(firstName, licenseKey, expiryFormatted),
