@@ -71,7 +71,7 @@ RESEND_API_KEY        = re_xxxxxxxxxxxx
 EMAIL_FROM            = 4Hard Zap-Marketing <onboarding@resend.dev>
 EMAIL_REPLY_TO        = 4hard.it@gmail.com
 HOTMART_HOTTOK        = (token do Hotmart)
-CORS_ORIGIN           = https://empowering-acceptance-production-1eec.up.railway.app
+CORS_ORIGIN           = https://secure-illumination-production-37f3.up.railway.app
 NODE_ENV              = production
 PORT                  = 3000
 ```
@@ -95,7 +95,7 @@ Ajustar `jwtService.ts` para ler de variável de ambiente se o arquivo não exis
 
 URL para cadastrar no Hotmart:
 ```
-https://empowering-acceptance-production-1eec.up.railway.app/api/webhook/hotmart
+https://secure-illumination-production-37f3.up.railway.app/api/webhook/hotmart
 ```
 
 ---
